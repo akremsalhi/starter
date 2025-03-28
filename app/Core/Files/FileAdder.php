@@ -48,15 +48,24 @@ class FileAdder {
                 error: $uploadedFile?->getErrorMessage()
             );
         }
-        
-        $path = $this->filesystem->putFileAs($uploadedFile, $directory, $name, $options);
-        
-        
-        if (! $path) {
+
+        try {
+
+            $path = $this->filesystem->putFileAs($uploadedFile, $directory, $name, $options);
+            
+            if (! $path) {
+                return new UploadReport(
+                    isSuccess: false,
+                );
+            }
+
+        } catch (Throwable $e) {
             return new UploadReport(
                 isSuccess: false,
+                error: $e->getMessage()
             );
         }
+        
 
         return new UploadReport(
             isSuccess: true,
