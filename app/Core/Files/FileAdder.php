@@ -56,6 +56,7 @@ class FileAdder {
             if (! $path) {
                 return new UploadReport(
                     isSuccess: false,
+                    error: ! app()->isProduction() ? "Failed to upload file ectivate throw exception to see the full error message" : null
                 );
             }
 
