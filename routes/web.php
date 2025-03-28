@@ -8,7 +8,7 @@ Route::get('/', function (ImageAdder $imageAdder) {
 
     $imageAdder->modify(
         $imageAdder->store(storage_path('app/public/example.jpg'), 'images.jpg'),
-        function (Image $image, string $path) {
+        function (Image $image) {
             $image
             ->save();
         }

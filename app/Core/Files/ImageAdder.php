@@ -9,10 +9,6 @@ use Spatie\Image\Image;
 class ImageAdder extends FileAdder
 {
 
-    public const CONVERTION_DISK = 'local';
-
-
-
     public function __construct(
         private readonly Cloud $filesystem,
     ) {
@@ -30,6 +26,12 @@ class ImageAdder extends FileAdder
 
         $image = Image::load($uploadReport->value);
 
-        return $callback($image, $uploadReport->value);
+        $path = $callback($image);
+
+        if ($path) {
+            return $path;
+        }
+
+        return $uploadReport->value;
     }
 }
