@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use App\Core\Models\Pivot;
 
 class {{ class }} extends Pivot
 {

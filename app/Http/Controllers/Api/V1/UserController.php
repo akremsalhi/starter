@@ -14,6 +14,16 @@ class UserController extends ApiController
     }
 
     public function store(UserData $userData) {
-        return $this->respondSuccess($userData);
+        $user = User::create($userData->except('image')->toArray());
+
+        if ($userData->image && ! $userData->image->isValid()) {
+            return $this->respondError(__('validation.uploaded', ['attribute' => 'image']));
+        }
+
+        if ($userData->image) {
+            $user->addMediaFromRequest('image')->toMediaCollection(User::PHOTO_COLLECTION); 
+        }
+
+        return $this->respondSuccess($userData->except('image'));
     }
 }
