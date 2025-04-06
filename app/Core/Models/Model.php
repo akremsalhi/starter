@@ -2,8 +2,8 @@
 
 namespace App\Core\Models;
 
-use Illuminate\Database\Eloquent\Model as LaravelModel;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
-class Model extends LaravelModel {
+class Model extends EloquentModel {
     //
 }

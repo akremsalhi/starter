@@ -21,7 +21,7 @@ class UserController extends ApiController
         }
 
         if ($userData->image) {
-            $user->addMediaFromRequest('image')->toMediaCollection(User::PHOTO_COLLECTION); 
+            $user->addMediaFromRequest('image')->toMediaCollection(User::PROFILE_PHOTO); 
         }
 
         return $this->respondSuccess($userData->except('image'));

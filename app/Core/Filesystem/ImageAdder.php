@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Files;
+namespace App\Core\Filesystem;
 
 use Illuminate\Contracts\Filesystem\Cloud;
 use Spatie\Image\Image;

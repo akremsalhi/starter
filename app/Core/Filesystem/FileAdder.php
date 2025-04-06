@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Files;
+namespace App\Core\Filesystem;
 
 use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Http\File;
@@ -56,7 +56,7 @@ class FileAdder {
             if (! $path) {
                 return new UploadReport(
                     isSuccess: false,
-                    error: ! app()->isProduction() ? "Failed to upload file ectivate throw exception to see the full error message" : null
+                    error: ! app()->isProduction() ? "Failed to upload file activate filesystem throwing exception to see the full error message" : null
                 );
             }
 
