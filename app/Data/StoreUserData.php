@@ -5,13 +5,13 @@ namespace App\Data;
 use Illuminate\Http\UploadedFile;
 use Spatie\LaravelData\Attributes\Validation\Confirmed;
 use Spatie\LaravelData\Attributes\Validation\Email;
-use Spatie\LaravelData\Attributes\Validation\File;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Image;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Attributes\Validation\Password;
+use Spatie\LaravelData\Support\Validation\ValidationContext;
 
-class UserData extends Data
+class StoreUserData extends Data
 {
     public function __construct(
         #[Min(4)]
@@ -20,17 +20,18 @@ class UserData extends Data
         #[Email]
         #[Max(255)]
         public string $email,
-        #[Password]
+        #[Min(8)]
+        #[Max(255)]
         #[Confirmed]
         public string $password,
-        #[File]
+        #[Image]
+        #[Max(2048)]
         public ?UploadedFile $image,
     ) {
     }
 
-    
-    public static function authorize(): bool
+    public static function authorize(ValidationContext $context): bool
     {
-        return true;
+        return $context->fullPayload['name'] === 'John Doe';
     }
 }

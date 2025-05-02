@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Users\StoreUserAction;
 use App\Core\Http\Controllers\ApiController;
-use App\Data\UserData;
+use App\Data\StoreUserData;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
 
@@ -13,17 +14,17 @@ class UserController extends ApiController
         return $this->respondSuccess($user);
     }
 
-    public function store(UserData $userData) {
-        $user = User::create($userData->except('image')->toArray());
+    public function store(
+        StoreUserData $storeUserData,
+        StoreUserAction $storeUserAction
+    ) {
 
-        if ($userData->image && ! $userData->image->isValid()) {
-            return $this->respondError(__('validation.uploaded', ['attribute' => 'image']));
+        $storeUserResponse = $storeUserAction->handle($storeUserData);
+
+        if (! $storeUserResponse->isSuccess || ! $storeUserResponse->user) {
+            return $this->respondError($storeUserResponse->error);
         }
 
-        if ($userData->image) {
-            $user->addMediaFromRequest('image')->toMediaCollection(User::PROFILE_PHOTO); 
-        }
-
-        return $this->respondSuccess($userData->except('image'));
+        return $this->respondSuccess($storeUserResponse->user);
     }
 }

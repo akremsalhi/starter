@@ -20,7 +20,7 @@ class ImageAdder extends FileAdder
         callable $callback
     ) {
 
-        if (! $uploadReport->isSuccess || ! $this->filesystem->exists($uploadReport->value)) {
+        if (! $uploadReport->isSuccess || ! $uploadReport->value || ! $this->filesystem->exists($uploadReport->value)) {
             return false;
         }
 
