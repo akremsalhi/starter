@@ -16,15 +16,15 @@ class ImageAdder extends FileAdder
     }
 
     public function modify(
-        UploadReport $uploadReport,
+        UploadedFile $uploadedFile,
         callable $callback
     ) {
 
-        if (! $uploadReport->isSuccess || ! $uploadReport->value || ! $this->filesystem->exists($uploadReport->value)) {
+        if (! $uploadedFile->isSuccess || ! $uploadedFile->path || ! $this->filesystem->exists($uploadedFile->path)) {
             return false;
         }
 
-        $image = Image::load($uploadReport->value);
+        $image = Image::load($uploadedFile->path);
 
         $path = $callback($image);
 
@@ -32,6 +32,6 @@ class ImageAdder extends FileAdder
             return $path;
         }
 
-        return $uploadReport->value;
+        return $uploadedFile->path;
     }
 }

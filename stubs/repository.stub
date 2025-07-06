@@ -1,0 +1,12 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Database\Connection;
+
+class {{ class }}
+{
+    public function __construct(
+        private readonly Connection $connection
+    ) {}
+}

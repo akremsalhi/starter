@@ -3,8 +3,8 @@
 namespace App\Core\Filesystem;
 
 use Illuminate\Contracts\Filesystem\Cloud;
-use Illuminate\Http\File;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Http\UploadedFile as LaravelUploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -23,11 +23,12 @@ class FileAdder {
         $this->filesystem = Storage::disk($disk);
     }
 
+    
     public function store (
-        array|File|string|UploadedFile|null $uploadedFile,
+        HttpFile|LaravelUploadedFile|string $uploadedFile,
         ?string $directory = '',
         $options = [],
-    ): UploadReport {
+    ): UploadedFile {
         return $this->storeAs(
             uploadedFile: $uploadedFile,
             directory: $directory,
@@ -36,14 +37,14 @@ class FileAdder {
     }
 
     public function storeAs (
-        array|File|string|UploadedFile|null $uploadedFile,
-        string $directory = '',
+        HttpFile|LaravelUploadedFile|string $uploadedFile,
+        HttpFile|LaravelUploadedFile|string|array|null $directory = '',
         ?string $name = null,
         $options = [],
-    ): UploadReport {
+    ): UploadedFile {
 
-        if ($uploadedFile instanceof UploadedFile && ! $uploadedFile?->isValid()) {
-            return new UploadReport(
+        if ($uploadedFile instanceof LaravelUploadedFile && ! $uploadedFile?->isValid()) {
+            return new UploadedFile(
                 isSuccess: false,
                 error: $uploadedFile?->getErrorMessage()
             );
@@ -54,23 +55,23 @@ class FileAdder {
             $path = $this->filesystem->putFileAs($uploadedFile, $directory, $name, $options);
             
             if (! $path) {
-                return new UploadReport(
+                return new UploadedFile(
                     isSuccess: false,
-                    error: ! app()->isProduction() ? "Failed to upload file activate filesystem throwing exception to see the full error message" : null
+                    error: ! app()->isProduction() ? "Failed to upload file: activate throwing exception on disk {$this->disk} to see full error message" : null
                 );
             }
 
         } catch (Throwable $e) {
-            return new UploadReport(
+            return new UploadedFile(
                 isSuccess: false,
                 error: $e->getMessage()
             );
         }
         
 
-        return new UploadReport(
+        return new UploadedFile(
             isSuccess: true,
-            value: $path
+            path: $path
         );
     }
 
@@ -91,10 +92,10 @@ class FileAdder {
     }
 }
 
-class UploadReport {
+class UploadedFile {
     public function __construct(
         public bool $isSuccess,
-        public ?string $value = null,
+        public ?string $path = null,
         public ?string $error = null,
     ) {}
 }

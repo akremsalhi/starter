@@ -23,12 +23,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configureModels();
+
+        $this->configureDatabase();
+
+        $this->configureDates();
+    }
+
+    private function configureModels(): void
+    {
         Model::shouldBeStrict(! app()->isProduction());
 
         Model::automaticallyEagerLoadRelationships();
+    }
 
+    private function configureDatabase(): void
+    {
         DB::prohibitDestructiveCommands(app()->isProduction());
+    }
 
+    private function configureDates(): void
+    {
         Date::useClass(CarbonImmutable::class);
     }
 }
